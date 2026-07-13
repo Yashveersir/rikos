@@ -24,6 +24,8 @@ export function ContactForm() {
       if (res.success) {
         toast.success("Message sent! We'll get back to you soon.");
         (e.target as HTMLFormElement).reset();
+      } else {
+        toast.error(res.error || "Failed to send message. Please try again.");
       }
     } catch (err: any) {
       toast.error(err.message || "Failed to send message. Please try again.");

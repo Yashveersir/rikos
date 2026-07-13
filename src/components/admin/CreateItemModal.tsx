@@ -63,11 +63,15 @@ export function CreateItemModal({ open, onOpenChange, onSuccess, categories, def
   const onSubmit = async (values: z.infer<typeof createMenuItemSchema>) => {
     setIsSubmitting(true);
     try {
-      await adminCreateItem({ data: values });
-      toast.success("Item created successfully");
-      form.reset();
-      onSuccess();
-      onOpenChange(false);
+      const res = await adminCreateItem({ data: values });
+      if (res.success) {
+        toast.success("Item created successfully");
+        form.reset();
+        onSuccess();
+        onOpenChange(false);
+      } else {
+        toast.error(res.error || "Failed to create item");
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to create item");
     } finally {

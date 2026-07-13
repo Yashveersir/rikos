@@ -45,11 +45,15 @@ export function CreateCategoryModal({ open, onOpenChange, onSuccess }: CreateCat
   const onSubmit = async (values: z.infer<typeof createMenuCategorySchema>) => {
     setIsSubmitting(true);
     try {
-      await adminCreateCategory({ data: values });
-      toast.success("Category created successfully");
-      form.reset();
-      onSuccess();
-      onOpenChange(false);
+      const res = await adminCreateCategory({ data: values });
+      if (res.success) {
+        toast.success("Category created successfully");
+        form.reset();
+        onSuccess();
+        onOpenChange(false);
+      } else {
+        toast.error(res.error || "Failed to create category");
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to create category");
     } finally {

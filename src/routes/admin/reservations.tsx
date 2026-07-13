@@ -29,6 +29,8 @@ function AdminReservations() {
       if (res.success) {
         toast.success(`Reservation marked as ${status}`);
         refetch();
+      } else {
+        toast.error(res.error || "Failed to update reservation");
       }
     } catch (err: any) {
       toast.error(err.message || "Failed to update reservation");

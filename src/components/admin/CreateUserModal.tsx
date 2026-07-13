@@ -58,11 +58,15 @@ export function CreateUserModal({ open, onOpenChange, onSuccess }: CreateUserMod
   const onSubmit = async (values: z.infer<typeof createUserSchema>) => {
     setIsSubmitting(true);
     try {
-      await adminCreateUser({ data: values });
-      toast.success("User created successfully");
-      form.reset();
-      onSuccess();
-      onOpenChange(false);
+      const res = await adminCreateUser({ data: values });
+      if (res.success) {
+        toast.success("User created successfully");
+        form.reset();
+        onSuccess();
+        onOpenChange(false);
+      } else {
+        toast.error(res.error || "Failed to create user");
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to create user");
     } finally {

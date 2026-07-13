@@ -33,7 +33,8 @@ function AdminMenu() {
   const handleToggle = async (id: string) => {
     setTogglingId(id);
     try {
-      await adminToggleItem({ data: { id } });
+      const res = await adminToggleItem({ data: { id } });
+      if (!res.success) throw new Error(res.error);
       toast.success("Item availability updated");
       refetch();
     } catch (err: any) {

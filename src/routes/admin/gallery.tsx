@@ -34,7 +34,8 @@ function AdminGallery() {
       const uploadedUrl = uploadRes.url;
 
       // 2. Save the URL to the database
-      await adminAddGalleryImage({ data: { url: uploadedUrl, alt: file.name } });
+      const saveRes = await adminAddGalleryImage({ data: { url: uploadedUrl, alt: file.name } });
+      if (!saveRes.success) throw new Error(saveRes.error);
       toast.success("Image uploaded to gallery");
       refetch();
       return uploadedUrl;
@@ -47,7 +48,8 @@ function AdminGallery() {
   const handleToggle = async (id: string, currentIsActive: boolean) => {
     setActiveActionId(id);
     try {
-      await adminUpdateGalleryImage({ data: { id, isActive: !currentIsActive } });
+      const res = await adminUpdateGalleryImage({ data: { id, isActive: !currentIsActive } });
+      if (!res.success) throw new Error(res.error);
       toast.success("Image status updated");
       refetch();
     } catch (err: any) {
@@ -62,7 +64,8 @@ function AdminGallery() {
     
     setActiveActionId(id);
     try {
-      await adminDeleteGalleryImage({ data: { id } });
+      const res = await adminDeleteGalleryImage({ data: { id } });
+      if (!res.success) throw new Error(res.error);
       toast.success("Image deleted");
       refetch();
     } catch (err: any) {

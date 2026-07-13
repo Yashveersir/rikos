@@ -23,7 +23,8 @@ function AdminMessages() {
   const handleMarkRead = async (id: string) => {
     setMarkingId(id);
     try {
-      await adminMarkAsRead({ data: { id } });
+      const res = await adminMarkAsRead({ data: { id } });
+      if (!res.success) throw new Error(res.error);
       toast.success("Message marked as read");
       refetch();
     } catch (err: any) {

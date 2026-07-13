@@ -30,7 +30,8 @@ function AdminUsers() {
     
     setTogglingId(id);
     try {
-      await adminToggleUserStatus({ data: { id } });
+      const res = await adminToggleUserStatus({ data: { id } });
+      if (!res.success) throw new Error(res.error);
       toast.success("User status updated");
       refetch();
     } catch (err: any) {

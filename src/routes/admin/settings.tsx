@@ -33,7 +33,11 @@ function AdminSettings() {
     setIsSaving(true);
     try {
       const res = await adminSaveSettings({ data: formData });
-      if (res.success) toast.success("Settings saved successfully");
+      if (res.success) {
+        toast.success("Settings saved successfully");
+      } else {
+        toast.error(res.error || "Failed to save settings");
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to save settings");
     } finally {

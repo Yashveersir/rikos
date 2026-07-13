@@ -25,6 +25,8 @@ function AdminLogin() {
         // We use window.location here to ensure the full page reload 
         // to pick up the new http-only cookies for SSR properly
         window.location.href = "/admin";
+      } else {
+        toast.error(res.error || "Invalid credentials");
       }
     } catch (err: any) {
       toast.error(err.message || "Invalid credentials");
