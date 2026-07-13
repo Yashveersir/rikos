@@ -45,84 +45,106 @@ const formatMenuData = (data: any): any => {
 
 export const publicGetMenu = createServerFn({ method: 'GET' })
   .handler(async () => {
-    const data = await getPublicMenu()
-    return formatMenuData(data)
+      try { 
+                const data = await getPublicMenu()
+                return formatMenuData(data)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminGetCategories = createServerFn({ method: 'GET' })
   .handler(async () => {
-    requireAdmin()
-    return getAllCategories(true)
+      try { 
+                requireAdmin()
+                return getAllCategories(true)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminCreateCategory = createServerFn({ method: 'POST' })
   .validator(createMenuCategorySchema)
   .handler(async ({ data }) => {
-    requireAdmin()
-    return createCategory(data)
+      try { 
+                requireAdmin()
+                return createCategory(data)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminUpdateCategory = createServerFn({ method: 'POST' })
   .validator(createMenuCategorySchema.partial().extend({ id: z.string() }))
   .handler(async ({ data }) => {
-    requireAdmin()
-    const { id, ...updateData } = data
-    return updateCategory(id, updateData)
+      try { 
+                requireAdmin()
+                const { id, ...updateData } = data
+                return updateCategory(id, updateData)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminDeleteCategory = createServerFn({ method: 'POST' })
   .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    requireAdmin()
-    await deleteCategory(data.id)
-    return { success: true }
+      try { 
+                requireAdmin()
+                await deleteCategory(data.id)
+                return { success: true }
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminReorderCategories = createServerFn({ method: 'POST' })
   .validator(z.object({ ids: z.array(z.string()) }))
   .handler(async ({ data }) => {
-    requireAdmin()
-    await reorderCategories(data.ids)
-    return { success: true }
+      try { 
+                requireAdmin()
+                await reorderCategories(data.ids)
+                return { success: true }
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminGetItems = createServerFn({ method: 'GET' })
   .validator(z.object({ categoryId: z.string().optional() }).optional())
   .handler(async ({ data }) => {
-    requireAdmin()
-    const items = await getAllItems(data?.categoryId)
-    return formatMenuData(items)
+      try { 
+                requireAdmin()
+                const items = await getAllItems(data?.categoryId)
+                return formatMenuData(items)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminCreateItem = createServerFn({ method: 'POST' })
   .validator(createMenuItemSchema)
   .handler(async ({ data }) => {
-    requireAdmin()
-    const item = await createItem(data)
-    return formatMenuData(item)
+      try { 
+                requireAdmin()
+                const item = await createItem(data)
+                return formatMenuData(item)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminUpdateItem = createServerFn({ method: 'POST' })
   .validator(updateMenuItemSchema)
   .handler(async ({ data }) => {
-    requireAdmin()
-    const { id, ...updateData } = data
-    const item = await updateItem(id, updateData)
-    return formatMenuData(item)
+      try { 
+                requireAdmin()
+                const { id, ...updateData } = data
+                const item = await updateItem(id, updateData)
+                return formatMenuData(item)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminDeleteItem = createServerFn({ method: 'POST' })
   .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    requireAdmin()
-    await deleteItem(data.id)
-    return { success: true }
+      try { 
+                requireAdmin()
+                await deleteItem(data.id)
+                return { success: true }
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminToggleItem = createServerFn({ method: 'POST' })
   .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    requireAdmin()
-    const item = await toggleItemAvailability(data.id)
-    return formatMenuData(item)
+      try { 
+                requireAdmin()
+                const item = await toggleItemAvailability(data.id)
+                return formatMenuData(item)
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })

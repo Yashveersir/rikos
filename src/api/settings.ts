@@ -11,30 +11,36 @@ import {
 
 export const publicGetSettings = createServerFn({ method: 'GET' })
   .handler(async () => {
-    const cmsService = await import('@/server/services/cms.service')
-    return cmsService.getSettings([
-      'restaurant_name',
-      'restaurant_phone',
-      'restaurant_email',
-      'restaurant_address',
-      'opening_hours',
-      'instagram_url',
-      'facebook_url'
-    ])
+      try { 
+                const cmsService = await import('@/server/services/cms.service')
+                return cmsService.getSettings([
+                  'restaurant_name',
+                  'restaurant_phone',
+                  'restaurant_email',
+                  'restaurant_address',
+                  'opening_hours',
+                  'instagram_url',
+                  'facebook_url'
+                ])
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminGetSettings = createServerFn({ method: 'GET' })
   .handler(async () => {
-    requireAdmin()
-    const cmsService = await import('@/server/services/cms.service')
-    return cmsService.getAllSettings()
+      try { 
+                requireAdmin()
+                const cmsService = await import('@/server/services/cms.service')
+                return cmsService.getAllSettings()
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminSaveSettings = createServerFn({ method: 'POST' })
   .validator(z.record(z.string(), z.string()))
   .handler(async ({ data }) => {
-    requireAdmin()
-    const cmsService = await import('@/server/services/cms.service')
-    await cmsService.setSettings(data as Record<string, string>)
-    return { success: true }
+      try { 
+                requireAdmin()
+                const cmsService = await import('@/server/services/cms.service')
+                await cmsService.setSettings(data as Record<string, string>)
+                return { success: true }
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })

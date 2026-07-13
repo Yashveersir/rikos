@@ -50,8 +50,6 @@ export function ReservationDialog() {
       const res = await submitReservation({ data });
       if (res.success) {
         setIsSuccess(true);
-      } else {
-        toast.error(res.error || "Failed to submit reservation.");
       }
     } catch (err: any) {
       console.error("Reservation Error:", err); 

@@ -9,26 +9,32 @@ import { z } from 'zod'
 export const submitContact = createServerFn({ method: 'POST' })
   .validator(contactSchema)
   .handler(async ({ data }) => {
-    const request = getRequest()
-    const ip = request?.headers.get('x-forwarded-for') ?? 'unknown'
-    
-    const { allowed } = checkRateLimit(`contact:${ip}`, 5, 3600_000)
-    if (!allowed) throw new Error('Too many requests. Please try again later.')
-    
-    await createContactMessage(data, ip)
-    return { success: true }
+      try { 
+                const request = getRequest()
+                const ip = request?.headers.get('x-forwarded-for') ?? 'unknown'
+                
+                const { allowed } = checkRateLimit(`contact:${ip}`, 5, 3600_000)
+                if (!allowed) throw new Error('Too many requests. Please try again later.')
+                
+                await createContactMessage(data, ip)
+                return { success: true }
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminGetMessages = createServerFn({ method: 'GET' })
   .handler(async () => {
-    requireAdmin()
-    return getContactMessages()
+      try { 
+                requireAdmin()
+                return getContactMessages()
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
 
 export const adminMarkAsRead = createServerFn({ method: 'POST' })
   .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    requireAdmin()
-    await markMessageAsRead(data.id)
-    return { success: true }
+      try { 
+                requireAdmin()
+                await markMessageAsRead(data.id)
+                return { success: true }
+               } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
