@@ -17,7 +17,7 @@ const stats = [
 
 export function About() {
   return (
-    <section id="about" className="relative py-32">
+    <section id="about" className="relative py-32 scroll-mt-24">
       <div className="mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-2 lg:items-center">
         <div className="relative order-2 lg:order-1">
           <div className="grid grid-cols-6 grid-rows-6 gap-4 h-[560px]">

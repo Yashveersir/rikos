@@ -52,7 +52,7 @@ export function ReservationDialog() {
         setIsSuccess(true);
       }
     } catch (err: any) {
-      toast.error(err.message || "Failed to submit reservation. Please try again.");
+      console.error("Reservation Error:", err); toast.error(err.message || "Failed to submit reservation. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

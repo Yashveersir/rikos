@@ -25,7 +25,7 @@ const items = [
 
 export function Features() {
   return (
-    <section className="relative py-32">
+    <section className="relative py-32 scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-2xl">
           <Reveal>

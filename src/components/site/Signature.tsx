@@ -14,7 +14,7 @@ const cards = [
 
 export function Signature() {
   return (
-    <section className="relative py-32">
+    <section className="relative py-32 scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <Reveal>

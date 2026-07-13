@@ -4,7 +4,7 @@ import hero from "@/assets/hero.jpg";
 
 export function CTA() {
   return (
-    <section className="relative overflow-hidden py-32">
+    <section className="relative overflow-hidden py-32 scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 60 }}

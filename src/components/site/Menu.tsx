@@ -286,7 +286,7 @@ export function Menu() {
   const visible = active === "All" ? dbSections : dbSections.filter((s: any) => s.group === active);
 
   return (
-    <section id="menu" className="relative py-32">
+    <section id="menu" className="relative py-32 scroll-mt-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px hairline" />
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">

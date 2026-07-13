@@ -14,6 +14,7 @@ import { requireAdmin } from '@/server/middleware/auth.middleware'
 export const submitReservation = createServerFn({ method: 'POST' })
   .validator(createReservationSchema)
   .handler(async ({ data }) => {
+    console.log("HIT SUBMIT RESERVATION HANDLER", data);
     const request = getRequest()
     const ip = request?.headers.get('x-forwarded-for') ?? 'unknown'
     
@@ -21,6 +22,7 @@ export const submitReservation = createServerFn({ method: 'POST' })
     const { allowed } = checkRateLimit(`reservation:${data.email}`, 3, 3600_000)
     if (!allowed) throw new Error('Too many requests. Please try again later.')
     
+    console.log("Creating reservation:", data);
     const reservation = await createReservation(data)
     return { success: true, id: reservation.id }
   })
@@ -33,6 +35,7 @@ export const adminGetReservations = createServerFn({ method: 'GET' })
     date: z.string().optional()
   }).optional())
   .handler(async ({ data }) => {
+    console.log("HIT SUBMIT RESERVATION HANDLER", data);
     requireAdmin()
     return getReservations(data)
   })
@@ -40,6 +43,7 @@ export const adminGetReservations = createServerFn({ method: 'GET' })
 export const adminUpdateReservation = createServerFn({ method: 'POST' })
   .validator(updateReservationSchema)
   .handler(async ({ data }) => {
+    console.log("HIT SUBMIT RESERVATION HANDLER", data);
     requireAdmin()
     const reservation = await import('@/server/services/reservation.service').then(m => m.updateReservation(data))
     return { success: true, id: reservation.id }
@@ -54,5 +58,6 @@ export const adminGetReservationStats = createServerFn({ method: 'GET' })
 export const publicGetAvailableTables = createServerFn({ method: 'GET' })
   .validator(z.object({ date: z.string(), time: z.string(), guests: z.number() }))
   .handler(async ({ data }) => {
+    console.log("HIT SUBMIT RESERVATION HANDLER", data);
     return getAvailableTables(data.date, data.time, data.guests)
   })

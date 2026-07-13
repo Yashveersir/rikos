@@ -31,7 +31,7 @@ const reviews = [
 
 export function Reviews() {
   return (
-    <section id="reviews" className="relative overflow-hidden py-32">
+    <section id="reviews" className="relative overflow-hidden py-32 scroll-mt-24">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(201,162,39,0.08),transparent_60%)]" />
 
       <div className="mx-auto max-w-7xl px-6">
