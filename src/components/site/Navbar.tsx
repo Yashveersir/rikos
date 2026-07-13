@@ -22,7 +22,8 @@ export function Navbar() {
     queryFn: () => publicGetSettings(),
   });
 
-  const logoUrl = settings?.restaurant_logo;
+  const defaultLogoUrl = "https://wzdifoawilxxoaeskgni.supabase.co/storage/v1/object/public/logos/logo-1783910429252.jpg";
+  const logoUrl = settings?.restaurant_logo || defaultLogoUrl;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
