@@ -15,18 +15,24 @@ import { requireAdmin } from '@/server/middleware/auth.middleware'
 export const submitReservation = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
       try {
-                  // Validate manually to prevent ZodError serialization crashes
-                  const validated = createReservationSchema.parse(data)
-                  
-                  const request = getRequest()
-                  const ip = request?.headers.get('x-forwarded-for') ?? 'unknown'
-                  
-                  const { allowed } = checkRateLimit(`reservation:${validated.email}`, 3, 3600_000)
-                  if (!allowed) return { success: false, error: 'Too many requests. Please try again later.' }
-                  
-                  const reservation = await createReservation(validated)
-                  return { success: true, id: reservation.id }
-                } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.errors ? e.errors[0]?.message || "Invalid input" : "Failed to save reservation. Please try again." }; }
+            // Validate manually to prevent ZodError serialization crashes
+            const validated = createReservationSchema.parse(data)
+            
+            let ip = 'unknown';
+            try {
+              const req = (await import('@tanstack/react-start/server')).getRequest?.();
+              if (req) ip = (req.headers as any)?.get?.('x-forwarded-for') || (req.headers as any)?.['x-forwarded-for'] || 'unknown';
+            } catch(e) {}
+            
+            const { allowed } = checkRateLimit(`reservation:${validated.email}`, 3, 3600_000)
+            if (!allowed) return { success: false, error: 'Too many requests. Please try again later.', id: undefined }
+            
+            const reservation = await createReservation(validated)
+            return { success: true, id: reservation.id, error: null }
+          } catch (e: any) { 
+            console.error("Server Error:", e); 
+            return { success: false, error: e.errors ? e.errors[0]?.message || "Invalid input" : (e.message || "Failed to save reservation. Please try again."), id: undefined }; 
+          }
   })
 
 export const adminGetReservations = createServerFn({ method: 'GET' })

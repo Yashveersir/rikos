@@ -51,7 +51,7 @@ export function ReservationDialog() {
       if (res.success) {
         setIsSuccess(true);
       } else {
-        toast.error(res.error || "Failed to submit reservation.");
+        toast.error(res.error || "Failed to submit reservation. Please try again.");
       }
     } catch (err: any) {
       console.error("Reservation Error:", err); 
