@@ -44,13 +44,19 @@ export function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6">
-        <a href="#home" className="group flex items-center">
-          <span className="relative w-32 sm:w-40 overflow-hidden transition-all">
+        <a href="#home" className="group flex items-center gap-3">
+          <span className="relative h-10 flex items-center transition-all group-hover:opacity-80">
             <img
               src={logoUrl}
-              alt="Riko's Cafe & Restro-Lounge"
-              className="h-auto w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+              alt="Riko's storefront"
+              className="h-full w-auto object-contain"
             />
+          </span>
+          <span className="font-display text-2xl tracking-wide gold-gradient-text">
+            RIKO&apos;S
+          </span>
+          <span className="hidden text-[10px] uppercase tracking-[0.4em] text-muted-foreground sm:block">
+            Cafe · Restro-Lounge
           </span>
         </a>
 
