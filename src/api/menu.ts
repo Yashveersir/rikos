@@ -22,13 +22,24 @@ import { requireAdmin } from '@/server/middleware/auth.middleware'
 
 // Format decimals to numbers for client serialization
 const formatMenuData = (data: any): any => {
+  if (data === null || data === undefined) return data
+  
+  if (typeof data === 'object' && typeof data.toNumber === 'function') {
+    return data.toNumber()
+  }
+  
+  if (data instanceof Date) return data
+  
   if (Array.isArray(data)) return data.map(formatMenuData)
-  if (data && typeof data === 'object') {
-    const formatted = { ...data }
-    if (formatted.price) formatted.price = Number(formatted.price)
-    if (formatted.items) formatted.items = formatMenuData(formatted.items)
+  
+  if (typeof data === 'object') {
+    const formatted: any = {}
+    for (const key in data) {
+      formatted[key] = formatMenuData(data[key])
+    }
     return formatted
   }
+  
   return data
 }
 

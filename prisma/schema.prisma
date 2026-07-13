@@ -8,12 +8,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum AdminRole {
-  SUPER_ADMIN
-  ADMIN
-  STAFF
-}
-
 model AdminUser {
   id           String        @id @default(cuid())
   email        String        @unique
@@ -30,51 +24,34 @@ model AdminUser {
 model ActivityLog {
   id          String     @id @default(cuid())
   adminUserId String?
-  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
   action      String
   entity      String
   entityId    String?
   details     Json?
   ipAddress   String?
   createdAt   DateTime   @default(now())
-}
-
-enum ReservationStatus {
-  PENDING
-  CONFIRMED
-  REJECTED
-  CANCELLED
-  COMPLETED
-}
-
-enum Occasion {
-  BIRTHDAY
-  ANNIVERSARY
-  CORPORATE
-  DATE_NIGHT
-  CASUAL
-  OTHER
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
 }
 
 model Reservation {
-  id              String             @id @default(cuid())
+  id              String            @id @default(cuid())
   name            String
   email           String
   phone           String
-  date            DateTime           @db.Date
+  date            DateTime          @db.Date
   time            String
   guests          Int
-  occasion        Occasion           @default(CASUAL)
-  specialRequests String?            @db.Text
-  status          ReservationStatus  @default(PENDING)
+  occasion        Occasion          @default(CASUAL)
+  specialRequests String?
+  status          ReservationStatus @default(PENDING)
   tableId         String?
-  table           RestaurantTable?   @relation(fields: [tableId], references: [id])
-  internalNotes   String?            @db.Text
+  internalNotes   String?
   reminderSentAt  DateTime?
   confirmedAt     DateTime?
   cancelledAt     DateTime?
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  table           RestaurantTable?  @relation(fields: [tableId], references: [id])
 
   @@index([date, time])
   @@index([status])
@@ -94,7 +71,7 @@ model MenuCategory {
   id          String     @id @default(cuid())
   name        String
   slug        String     @unique
-  description String?    @db.Text
+  description String?
   imageUrl    String?
   sortOrder   Int        @default(0)
   isActive    Boolean    @default(true)
@@ -108,9 +85,8 @@ model MenuCategory {
 model MenuItem {
   id              String       @id @default(cuid())
   categoryId      String
-  category        MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   name            String
-  description     String?      @db.Text
+  description     String?
   price           Decimal      @db.Decimal(10, 2)
   imageUrl        String?
   isAvailable     Boolean      @default(true)
@@ -118,27 +94,28 @@ model MenuItem {
   isChefSpecial   Boolean      @default(false)
   isTodaySpecial  Boolean      @default(false)
   isVeg           Boolean      @default(false)
-  spicyLevel      Int          @default(0) // 0-3
+  spicyLevel      Int          @default(0)
   prepTimeMinutes Int?
   tags            String[]     @default([])
   sortOrder       Int          @default(0)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
+  category        MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([categoryId])
   @@index([sortOrder])
 }
 
 model GalleryImage {
-  id          String   @id @default(cuid())
-  url         String
-  alt         String
-  category    String?
-  sortOrder   Int      @default(0)
-  isActive    Boolean  @default(true)
-  uploadedBy  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  url        String
+  alt        String
+  category   String?
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  uploadedBy String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([category])
   @@index([sortOrder])
@@ -149,7 +126,7 @@ model Testimonial {
   name       String
   email      String?
   rating     Int      @default(5)
-  content    String   @db.Text
+  content    String
   isApproved Boolean  @default(false)
   isFeatured Boolean  @default(false)
   isHidden   Boolean  @default(false)
@@ -166,10 +143,10 @@ model ContactMessage {
   email        String
   phone        String?
   subject      String?
-  message      String    @db.Text
+  message      String
   isRead       Boolean   @default(false)
   repliedAt    DateTime?
-  replyContent String?   @db.Text
+  replyContent String?
   ipAddress    String?
   createdAt    DateTime  @default(now())
 
@@ -191,14 +168,14 @@ model NewsletterSubscriber {
 model WebsiteSetting {
   id          String   @id @default(cuid())
   key         String   @unique
-  value       String   @db.Text
+  value       String
   description String?
   updatedAt   DateTime @updatedAt
 }
 
 model OpeningHour {
   id        String  @id @default(cuid())
-  dayOfWeek Int     @unique // 0=Sunday, 1=Monday...
+  dayOfWeek Int     @unique
   openTime  String
   closeTime String
   isClosed  Boolean @default(false)
@@ -208,7 +185,7 @@ model OpeningHour {
 model SpecialOffer {
   id          String   @id @default(cuid())
   title       String
-  description String   @db.Text
+  description String
   imageUrl    String?
   validFrom   DateTime
   validTo     DateTime
@@ -248,6 +225,43 @@ model AnalyticsEvent {
   @@index([createdAt])
 }
 
+model NotificationLog {
+  id           String             @id @default(cuid())
+  type         NotificationType
+  recipient    String
+  subject      String?
+  templateName String?
+  status       NotificationStatus
+  error        String?
+  sentAt       DateTime?
+  createdAt    DateTime           @default(now())
+
+  @@index([status])
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  STAFF
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum Occasion {
+  BIRTHDAY
+  ANNIVERSARY
+  CORPORATE
+  DATE_NIGHT
+  CASUAL
+  OTHER
+}
+
 enum NotificationType {
   EMAIL
   SMS
@@ -257,18 +271,4 @@ enum NotificationStatus {
   SENT
   FAILED
   PENDING
-}
-
-model NotificationLog {
-  id           String             @id @default(cuid())
-  type         NotificationType
-  recipient    String
-  subject      String?
-  templateName String?
-  status       NotificationStatus
-  error        String?            @db.Text
-  sentAt       DateTime?
-  createdAt    DateTime           @default(now())
-
-  @@index([status])
 }

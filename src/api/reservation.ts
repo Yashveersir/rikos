@@ -12,19 +12,23 @@ import { getRequest } from '@tanstack/react-start/server'
 import { requireAdmin } from '@/server/middleware/auth.middleware'
 
 export const submitReservation = createServerFn({ method: 'POST' })
-  .validator(createReservationSchema)
   .handler(async ({ data }) => {
-    console.log("HIT SUBMIT RESERVATION HANDLER", data);
-    const request = getRequest()
-    const ip = request?.headers.get('x-forwarded-for') ?? 'unknown'
-    
-    // Rate limit based on email and IP to prevent spamming
-    const { allowed } = checkRateLimit(`reservation:${data.email}`, 3, 3600_000)
-    if (!allowed) throw new Error('Too many requests. Please try again later.')
-    
-    console.log("Creating reservation:", data);
-    const reservation = await createReservation(data)
-    return { success: true, id: reservation.id }
+    try {
+      // Validate manually to prevent ZodError serialization crashes
+      const validated = createReservationSchema.parse(data)
+      
+      const request = getRequest()
+      const ip = request?.headers.get('x-forwarded-for') ?? 'unknown'
+      
+      const { allowed } = checkRateLimit(`reservation:${validated.email}`, 3, 3600_000)
+      if (!allowed) return { success: false, error: 'Too many requests. Please try again later.' }
+      
+      const reservation = await createReservation(validated)
+      return { success: true, id: reservation.id }
+    } catch (e: any) {
+      console.error("Server Error in submitReservation:", e);
+      return { success: false, error: e.errors ? e.errors[0]?.message || "Invalid input" : "Failed to save reservation. Please try again." }
+    }
   })
 
 export const adminGetReservations = createServerFn({ method: 'GET' })
