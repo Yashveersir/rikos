@@ -45,11 +45,11 @@ export function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6">
         <a href="#home" className="group flex items-center gap-3">
           {logoUrl && (
-            <span className="relative h-10 flex items-center transition-all group-hover:opacity-80 rounded-lg border border-white/10 p-1.5 bg-black/20">
+            <span className="relative h-14 flex items-center transition-all group-hover:opacity-80">
               <img
                 src={logoUrl}
                 alt="Riko's Logo"
-                className="h-full w-auto object-contain rounded-sm"
+                className="h-full w-auto object-contain"
               />
             </span>
           )}
