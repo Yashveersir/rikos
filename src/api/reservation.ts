@@ -5,7 +5,8 @@ import {
   createReservation, 
   getReservations, 
   getReservationStats, 
-  getAvailableTables 
+  getAvailableTables,
+  updateReservation
 } from '@/server/services/reservation.service'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { getRequest } from '@tanstack/react-start/server'
@@ -49,7 +50,7 @@ export const adminUpdateReservation = createServerFn({ method: 'POST' })
       try { 
                       console.log("HIT SUBMIT RESERVATION HANDLER", data);
                       requireAdmin()
-                      const reservation = await import('@/server/services/reservation.service').then(m => m.updateReservation(data))
+                      const reservation = await updateReservation(data)
                       return { success: true, id: reservation.id }
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })

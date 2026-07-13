@@ -3,7 +3,8 @@ import { z } from 'zod'
 import { requireAdmin } from '@/server/middleware/auth.middleware'
 import { 
   getAllSettings,
-  setSettings
+  setSettings,
+  getSettings
 } from '@/server/services/cms.service'
 
 // We need to slightly update cms service to expose these
@@ -12,8 +13,7 @@ import {
 export const publicGetSettings = createServerFn({ method: 'GET' })
   .handler(async () => {
       try { 
-                      const cmsService = await import('@/server/services/cms.service')
-                      return cmsService.getSettings([
+                      return getSettings([
                         'restaurant_name',
                         'restaurant_phone',
                         'restaurant_email',
@@ -30,8 +30,7 @@ export const adminGetSettings = createServerFn({ method: 'GET' })
   .handler(async () => {
       try { 
                       requireAdmin()
-                      const cmsService = await import('@/server/services/cms.service')
-                      return cmsService.getAllSettings()
+                      return getAllSettings()
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })
 
@@ -40,8 +39,7 @@ export const adminSaveSettings = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
       try { 
                       requireAdmin()
-                      const cmsService = await import('@/server/services/cms.service')
-                      await cmsService.setSettings(data as Record<string, string>)
+                      await setSettings(data as Record<string, string>)
                       return { success: true }
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })
