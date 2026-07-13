@@ -4,7 +4,7 @@ import { ContactForm } from "./ContactForm";
 
 export function Contact() {
   return (
-    <section id="contact" className="relative py-32 scroll-mt-24">
+    <section id="contact" className="relative py-32 scroll-mt-40">
       <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-2xl">
           <Reveal>

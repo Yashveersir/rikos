@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/rikos-logo.webp.asset.json";
+import { useQuery } from "@tanstack/react-query";
+import { publicGetSettings } from "@/api/settings";
 
 const links = [
   { href: "#home", label: "Home" },
@@ -15,6 +17,13 @@ const links = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const { data: settings } = useQuery({
+    queryKey: ["publicSettings"],
+    queryFn: () => publicGetSettings(),
+  });
+
+  const logoUrl = settings?.restaurant_logo || logoAsset.url;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -38,7 +47,7 @@ export function Navbar() {
         <a href="#home" className="group flex items-center gap-3">
           <span className="relative h-9 w-9 overflow-hidden rounded-full ring-1 ring-gold/40 transition-all group-hover:ring-gold">
             <img
-              src={logoAsset.url}
+              src={logoUrl}
               alt="Riko's storefront"
               className="h-full w-full object-cover"
             />

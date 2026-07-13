@@ -20,7 +20,8 @@ export const publicGetSettings = createServerFn({ method: 'GET' })
                   'restaurant_address',
                   'opening_hours',
                   'instagram_url',
-                  'facebook_url'
+                  'facebook_url',
+                  'restaurant_logo'
                 ])
                } catch (e: any) { console.error("Server Error:", e); throw new Error(e.message || "Failed to process request"); }
   })
