@@ -69,7 +69,7 @@ export async function sendContactConfirmation(to: string, name: string, message:
       <h3 style="margin-top: 0; color: #C9A227; font-size: 16px; border-bottom: 1px solid #444; padding-bottom: 12px; margin-bottom: 16px;">Your Message Details</h3>
       <p style="margin: 0; color: #E5E5E5; line-height: 1.6;"><em>"${message.replace(/\n/g, '<br/>')}"</em></p>
     </div>
-    <p>If you have any urgent inquiries, feel free to call us directly.</p>
+    <p>If you have any urgent inquiries, feel free to call us directly at <strong>07477324365</strong>.</p>
     <p>Warm regards,<br/>The Riko's Team</p>
   `)
   await sendBrevoEmail(to, "We've received your message — Riko's Cafe", html)
@@ -116,6 +116,33 @@ export async function sendReservationConfirmation(to: string, res: { name: strin
     <p>Warm regards,<br/>The Riko's Team</p>
   `)
   await sendBrevoEmail(to, "Your Reservation Request — Riko's Cafe", html)
+}
+
+export async function sendReservationAdminNotification(data: { name: string; email: string; phone: string; date: string; time: string; guests: number; occasion: string; specialRequests?: string | null; id: string }): Promise<void> {
+  const html = baseHtml(`
+    <h2 style="color: #fff; font-size: 20px; margin-bottom: 20px; border-left: 4px solid #C9A227; padding-left: 12px;">New Reservation Request</h2>
+    <div style="background: #2A2A2A; padding: 24px; border-radius: 8px;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <tr><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #aaa; width: 120px;">Reference ID</td><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #fff;"><strong>${data.id}</strong></td></tr>
+        <tr><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #aaa;">Name</td><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #fff;"><strong>${data.name}</strong></td></tr>
+        <tr><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #aaa;">Email</td><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #fff;"><strong><a href="mailto:${data.email}">${data.email}</a></strong></td></tr>
+        <tr><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #aaa;">Phone</td><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #fff;"><strong>${data.phone}</strong></td></tr>
+        <tr><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #aaa;">Date & Time</td><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #fff;"><strong>${data.date} at ${data.time}</strong></td></tr>
+        <tr><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #aaa;">Guests</td><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #fff;"><strong>${data.guests} People</strong></td></tr>
+        <tr><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #aaa;">Occasion</td><td style="padding: 10px 0; border-bottom: 1px solid #444; color: #fff;"><strong>${data.occasion}</strong></td></tr>
+      </table>
+      ${data.specialRequests ? `
+      <div style="margin-top: 24px;">
+        <div style="color: #aaa; margin-bottom: 10px; font-weight: bold;">Special Requests:</div>
+        <div style="background: #1B1B1B; padding: 16px; border-radius: 6px; color: #E5E5E5; line-height: 1.6; border-left: 3px solid #C9A227;">
+          ${data.specialRequests.replace(/\n/g, '<br/>')}
+        </div>
+      </div>
+      ` : ''}
+    </div>
+    <p style="margin-top: 24px; color: #888;">Log in to the admin dashboard to confirm or reject this reservation.</p>
+  `)
+  await sendBrevoEmail(adminEmail, `New Reservation Request: ${data.name} for ${data.date}`, html)
 }
 
 export async function sendReservationStatusUpdate(to: string, name: string, status: 'CONFIRMED' | 'REJECTED' | 'CANCELLED', notes?: string): Promise<void> {

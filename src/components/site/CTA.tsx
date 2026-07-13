@@ -44,7 +44,7 @@ export function CTA() {
                 Reserve Table
               </a>
               <a
-                href="tel:+910000000000"
+                href="tel:07477324365"
                 className="group inline-flex items-center justify-center gap-3 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-xs font-medium uppercase tracking-[0.25em] text-foreground backdrop-blur-md transition-all hover:border-gold/60 hover:text-gold"
               >
                 <Phone size={16} />

@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
 import { CreateReservationInput, UpdateReservationInput } from '@/lib/validators/reservation'
-import { sendReservationConfirmation, sendReservationStatusUpdate } from '@/lib/email'
+import { sendReservationConfirmation, sendReservationAdminNotification, sendReservationStatusUpdate } from '@/lib/email'
 
 export async function createReservation(data: CreateReservationInput) {
   const reservation = await db.reservation.create({
@@ -25,6 +25,19 @@ export async function createReservation(data: CreateReservationInput) {
     time: data.time,
     guests: data.guests,
     occasion: data.occasion
+  }).catch(console.error)
+
+  // Send admin notification
+  sendReservationAdminNotification({
+    id: reservation.id,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    date: data.date,
+    time: data.time,
+    guests: data.guests,
+    occasion: data.occasion,
+    specialRequests: data.specialRequests
   }).catch(console.error)
 
   return reservation

@@ -39,8 +39,8 @@ export function Contact() {
                 Burdwan, West Bengal
               </InfoRow>
               <InfoRow icon={Phone} label="Phone">
-                <a href="tel:+910000000000" className="hover:text-gold">
-                  +91 00000 00000
+                <a href="tel:07477324365" className="hover:text-gold">
+                  07477324365
                 </a>
               </InfoRow>
               <InfoRow icon={Mail} label="Email">
