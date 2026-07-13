@@ -7,8 +7,10 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
-  resolve: {
-    dedupe: ["react", "react-dom"],
+  vite: {
+    resolve: {
+      dedupe: ["react", "react-dom"],
+    },
   },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
