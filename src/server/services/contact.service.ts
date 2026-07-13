@@ -10,8 +10,8 @@ export async function createContactMessage(data: ContactInput, ipAddress?: strin
     }
   })
 
-  // Send emails asynchronously
-  Promise.all([
+  // Send emails (awaited for serverless compatibility)
+  await Promise.all([
     sendContactConfirmation(data.email, data.name, data.message),
     sendContactAdminNotification(data)
   ]).catch(console.error)

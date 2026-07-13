@@ -26,8 +26,8 @@ export async function subscribeToNewsletter(data: NewsletterInput) {
     }
   })
 
-  // Send welcome email asynchronously
-  sendNewsletterWelcome(data.email, data.name).catch(console.error)
+  // Send welcome email (awaited for serverless compatibility)
+  await sendNewsletterWelcome(data.email, data.name).catch(console.error)
 
   return { success: true, alreadySubscribed: false }
 }

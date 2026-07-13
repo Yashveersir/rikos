@@ -17,8 +17,8 @@ export async function createReservation(data: CreateReservationInput) {
     }
   })
 
-  // Send confirmation email
-  sendReservationConfirmation(data.email, {
+  // Send confirmation email (awaited for serverless compatibility)
+  await sendReservationConfirmation(data.email, {
     id: reservation.id,
     name: data.name,
     date: data.date,
@@ -28,7 +28,7 @@ export async function createReservation(data: CreateReservationInput) {
   }).catch(console.error)
 
   // Send admin notification
-  sendReservationAdminNotification({
+  await sendReservationAdminNotification({
     id: reservation.id,
     name: data.name,
     email: data.email,
@@ -97,7 +97,7 @@ export async function updateReservation(data: UpdateReservationInput) {
   })
 
   if (data.status && data.status !== current.status && ['CONFIRMED', 'REJECTED', 'CANCELLED'].includes(data.status)) {
-    sendReservationStatusUpdate(
+    await sendReservationStatusUpdate(
       reservation.email, 
       reservation.name, 
       data.status as any,
