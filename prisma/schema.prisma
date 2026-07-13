@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  STAFF
+}
+
+model AdminUser {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     String
+  name         String
+  role         AdminRole     @default(STAFF)
+  isActive     Boolean       @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  activityLogs ActivityLog[]
+}
+
+model ActivityLog {
+  id          String     @id @default(cuid())
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+  action      String
+  entity      String
+  entityId    String?
+  details     Json?
+  ipAddress   String?
+  createdAt   DateTime   @default(now())
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum Occasion {
+  BIRTHDAY
+  ANNIVERSARY
+  CORPORATE
+  DATE_NIGHT
+  CASUAL
+  OTHER
+}
+
+model Reservation {
+  id              String             @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  date            DateTime           @db.Date
+  time            String
+  guests          Int
+  occasion        Occasion           @default(CASUAL)
+  specialRequests String?            @db.Text
+  status          ReservationStatus  @default(PENDING)
+  tableId         String?
+  table           RestaurantTable?   @relation(fields: [tableId], references: [id])
+  internalNotes   String?            @db.Text
+  reminderSentAt  DateTime?
+  confirmedAt     DateTime?
+  cancelledAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([date, time])
+  @@index([status])
+}
+
+model RestaurantTable {
+  id           String        @id @default(cuid())
+  number       Int           @unique
+  capacity     Int
+  location     String?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  reservations Reservation[]
+}
+
+model MenuCategory {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?    @db.Text
+  imageUrl    String?
+  sortOrder   Int        @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  items       MenuItem[]
+
+  @@index([sortOrder])
+}
+
+model MenuItem {
+  id              String       @id @default(cuid())
+  categoryId      String
+  category        MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name            String
+  description     String?      @db.Text
+  price           Decimal      @db.Decimal(10, 2)
+  imageUrl        String?
+  isAvailable     Boolean      @default(true)
+  isRecommended   Boolean      @default(false)
+  isChefSpecial   Boolean      @default(false)
+  isTodaySpecial  Boolean      @default(false)
+  isVeg           Boolean      @default(false)
+  spicyLevel      Int          @default(0) // 0-3
+  prepTimeMinutes Int?
+  tags            String[]     @default([])
+  sortOrder       Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([categoryId])
+  @@index([sortOrder])
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  url         String
+  alt         String
+  category    String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([sortOrder])
+}
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  name       String
+  email      String?
+  rating     Int      @default(5)
+  content    String   @db.Text
+  isApproved Boolean  @default(false)
+  isFeatured Boolean  @default(false)
+  isHidden   Boolean  @default(false)
+  source     String?  @default("website")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isApproved, isFeatured])
+}
+
+model ContactMessage {
+  id           String    @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  subject      String?
+  message      String    @db.Text
+  isRead       Boolean   @default(false)
+  repliedAt    DateTime?
+  replyContent String?   @db.Text
+  ipAddress    String?
+  createdAt    DateTime  @default(now())
+
+  @@index([isRead])
+}
+
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  isActive       Boolean   @default(true)
+  source         String?
+  subscribedAt   DateTime  @default(now())
+  unsubscribedAt DateTime?
+
+  @@index([isActive])
+}
+
+model WebsiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model OpeningHour {
+  id        String  @id @default(cuid())
+  dayOfWeek Int     @unique // 0=Sunday, 1=Monday...
+  openTime  String
+  closeTime String
+  isClosed  Boolean @default(false)
+  note      String?
+}
+
+model SpecialOffer {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  imageUrl    String?
+  validFrom   DateTime
+  validTo     DateTime
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([validFrom, validTo, isActive])
+}
+
+model PromoCode {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  discountPercent Int?
+  discountAmount  Decimal?  @db.Decimal(10, 2)
+  maxUses         Int?
+  usedCount       Int       @default(0)
+  validFrom       DateTime?
+  validTo         DateTime?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+
+  @@index([code, isActive])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  event     String
+  page      String?
+  data      Json?
+  sessionId String?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([event])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  EMAIL
+  SMS
+}
+
+enum NotificationStatus {
+  SENT
+  FAILED
+  PENDING
+}
+
+model NotificationLog {
+  id           String             @id @default(cuid())
+  type         NotificationType
+  recipient    String
+  subject      String?
+  templateName String?
+  status       NotificationStatus
+  error        String?            @db.Text
+  sentAt       DateTime?
+  createdAt    DateTime           @default(now())
+
+  @@index([status])
+}
