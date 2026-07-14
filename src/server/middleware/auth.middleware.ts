@@ -9,8 +9,18 @@ export function requireAdmin() {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     const origin = request.headers.get('origin')
     const appUrl = process.env.APP_URL
-    if (appUrl && origin && !origin.startsWith(appUrl)) {
-      throw new Error('CSRF Validation Failed')
+    const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
+    
+    if (origin) {
+      const isAllowed = 
+        (appUrl && origin.startsWith(appUrl)) || 
+        (vercelUrl && origin.includes(vercelUrl)) ||
+        origin.includes('vercel.app') || 
+        origin.includes('localhost')
+
+      if (!isAllowed) {
+        throw new Error(`CSRF Validation Failed: Origin ${origin} not allowed`)
+      }
     }
   }
 
