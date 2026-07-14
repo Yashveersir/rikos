@@ -114,7 +114,7 @@ function AdminGallery() {
               <div key={img.id} className={`group relative aspect-square overflow-hidden rounded-2xl border ${img.isActive ? 'border-white/10' : 'border-red-500/30 opacity-60'}`}>
                 <img src={img.url} alt={img.alt} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/60 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/40 md:bg-black/60 opacity-100 md:opacity-0 backdrop-blur-sm transition-opacity md:group-hover:opacity-100">
                   <button
                     onClick={() => handleToggle(img.id, img.isActive)}
                     disabled={activeActionId === img.id}

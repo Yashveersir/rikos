@@ -40,8 +40,8 @@ export function DataTable<T extends { id: string }>({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02]">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+      <div className="overflow-x-auto pb-4 scrollbar-hide">
+        <table className="w-full text-left text-sm whitespace-nowrap md:whitespace-normal">
           <thead className="border-b border-white/5 bg-white/[0.02] text-xs uppercase text-muted-foreground">
             <tr>
               {columns.map((col, i) => (
