@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { deleteImage } from '@/lib/storage'
 import { CreateMenuCategoryInput, CreateMenuItemInput, UpdateMenuItemInput } from '@/lib/validators/menu'
 
 export async function getPublicMenu() {
@@ -35,6 +36,20 @@ export async function updateCategory(id: string, data: Partial<CreateMenuCategor
 }
 
 export async function deleteCategory(id: string) {
+  const category = await db.menuCategory.findUnique({ where: { id } })
+  
+  if (category && category.imageUrl) {
+    try {
+      const urlParts = category.imageUrl.split('/menu-images/')
+      if (urlParts.length > 1) {
+        const path = urlParts[1]
+        await deleteImage('menu', path)
+      }
+    } catch (e) {
+      console.error("Failed to delete category image from storage:", e)
+    }
+  }
+
   await db.menuCategory.delete({ where: { id } })
 }
 
@@ -70,6 +85,20 @@ export async function updateItem(id: string, data: Partial<CreateMenuItemInput>)
 }
 
 export async function deleteItem(id: string) {
+  const item = await db.menuItem.findUnique({ where: { id } })
+  
+  if (item && item.imageUrl) {
+    try {
+      const urlParts = item.imageUrl.split('/menu-images/')
+      if (urlParts.length > 1) {
+        const path = urlParts[1]
+        await deleteImage('menu', path)
+      }
+    } catch (e) {
+      console.error("Failed to delete item image from storage:", e)
+    }
+  }
+
   await db.menuItem.delete({ where: { id } })
 }
 
