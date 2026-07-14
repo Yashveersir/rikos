@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Star, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { publicSubmitReview } from "@/api/testimonial";
+import { useRouter } from "@tanstack/react-router";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ interface WriteReviewModalProps {
 }
 
 export function WriteReviewModal({ onSuccess, children }: WriteReviewModalProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [rating, setRating] = useState(5);
@@ -54,8 +56,8 @@ export function WriteReviewModal({ onSuccess, children }: WriteReviewModalProps)
         setRating(5);
         setOpen(false);
         if (onSuccess) onSuccess();
-        // Since we auto-approve in the service for now, let's refresh the page
-        window.location.reload();
+        // Since we auto-approve in the service for now, let's refresh the data
+        router.invalidate();
       } else {
         toast.error(res.error || "Failed to submit review");
       }

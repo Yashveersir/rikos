@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { DataTable } from "@/components/admin/DataTable";
@@ -15,6 +15,7 @@ export const Route = createFileRoute("/admin/menu")({
 });
 
 function AdminMenu() {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -185,9 +186,8 @@ function AdminMenu() {
           open={isCategoryModalOpen} 
           onOpenChange={setIsCategoryModalOpen} 
           onSuccess={() => {
-            refetch(); // This technically refetches items, we might need a way to refetch categories... 
-            // In TanStack Query we'd ideally use queryClient.invalidateQueries, but refetching window works.
-            window.location.reload(); 
+            refetch(); // Refetches items
+            router.invalidate(); // Refetches categories
           }} 
         />
         
