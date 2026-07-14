@@ -1,5 +1,11 @@
 {
   "buildCommand": "prisma generate && bun run build",
   "installCommand": "bun install",
-  "framework": null
+  "framework": null,
+  "crons": [
+    {
+      "path": "/api/ping",
+      "schedule": "0 0 * * 1,4"
+    }
+  ]
 }

@@ -33,7 +33,8 @@ export const adminAddGalleryImage = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
       try { 
                       requireAdmin()
-                      return addGalleryImage(data.url, data.alt, data.category)
+                      const img = await addGalleryImage(data.url, data.alt, data.category)
+                      return { success: true, data: img }
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })
 
@@ -48,7 +49,8 @@ export const adminUpdateGalleryImage = createServerFn({ method: 'POST' })
       try { 
                       requireAdmin()
                       const { id, ...updateData } = data
-                      return updateGalleryImage(id, updateData)
+                      const img = await updateGalleryImage(id, updateData)
+                      return { success: true, data: img }
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })
 

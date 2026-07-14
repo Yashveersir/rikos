@@ -23,7 +23,12 @@ const items = [
   { icon: Camera, title: "Instagram-worthy", desc: "Every corner a frame." },
 ];
 
-export function Features() {
+export function Features({ settings }: { settings?: Record<string, string> }) {
+  const featuresTitle = settings?.features_title || "Nine reasons Burdwan calls this home.";
+  const words = featuresTitle.split(" ");
+  const lastWord = words.pop();
+  const rest = words.join(" ");
+
   return (
     <section className="relative py-32 scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6">
@@ -31,8 +36,7 @@ export function Features() {
           <Reveal>
             <SectionEyebrow>Why Riko&apos;s</SectionEyebrow>
             <h2 className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl">
-              Nine reasons Burdwan calls this{" "}
-              <span className="gold-gradient-text italic">home</span>.
+              {rest} <span className="gold-gradient-text italic">{lastWord}</span>
             </h2>
           </Reveal>
         </div>

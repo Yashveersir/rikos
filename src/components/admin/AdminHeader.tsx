@@ -1,9 +1,20 @@
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, Menu } from "lucide-react";
+import { useSidebar } from "./SidebarContext";
 
 export function AdminHeader({ title }: { title: string }) {
+  const { setIsOpen } = useSidebar();
+
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-[#0a0a0a]/80 px-8 backdrop-blur-md">
-      <h2 className="font-display text-2xl text-foreground">{title}</h2>
+    <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-[#0a0a0a]/80 px-4 md:px-8 backdrop-blur-md">
+      <div className="flex items-center gap-4">
+        <button 
+          className="lg:hidden text-muted-foreground hover:text-white"
+          onClick={() => setIsOpen(true)}
+        >
+          <Menu size={24} />
+        </button>
+        <h2 className="font-display text-xl md:text-2xl text-foreground truncate">{title}</h2>
+      </div>
       
       <div className="flex items-center gap-6">
         <div className="relative hidden md:block">

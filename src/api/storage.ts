@@ -5,20 +5,24 @@ import { getRequest } from '@tanstack/react-start/server'
 import { z } from 'zod'
 
 export const adminUploadFile = createServerFn({ method: 'POST' })
+  .validator((d: any) => d as FormData)
   .handler(async ({ data }) => {
       try { 
                       requireAdmin()
                       
-                      // In TanStack Start, the raw request can contain FormData
-                      const request = getRequest()
-                      if (!request) throw new Error("No request found")
-                      
-                      const formData = await request.formData()
-                      const file = formData.get('file') as File | null
-                      const bucket = formData.get('bucket') as string
+                      let file: File | null = null
+                      let bucket: string = ''
+
+                      if (data instanceof FormData) {
+                        file = data.get('file') as File | null
+                        bucket = data.get('bucket') as string
+                      } else if (data && typeof data === 'object') {
+                        file = (data as any).file as File | null
+                        bucket = (data as any).bucket as string
+                      }
                       
                       if (!file) throw new Error("No file provided")
-                      if (!Object.keys(BUCKETS).includes(bucket)) {
+                      if (!bucket || !Object.keys(BUCKETS).includes(bucket)) {
                         throw new Error("Invalid bucket specified")
                       }
 

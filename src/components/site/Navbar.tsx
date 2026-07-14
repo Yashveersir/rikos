@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { publicGetSettings } from "@/api/settings";
 
 const links = [
   { href: "#home", label: "Home" },
@@ -13,14 +11,9 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
-export function Navbar() {
+export function Navbar({ settings }: { settings?: Record<string, string> }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  const { data: settings } = useQuery({
-    queryKey: ["publicSettings"],
-    queryFn: () => publicGetSettings(),
-  });
 
   const defaultLogoUrl = "https://wzdifoawilxxoaeskgni.supabase.co/storage/v1/object/public/logos/logo-1783910429252.jpg";
   const logoUrl = settings?.restaurant_logo || defaultLogoUrl;

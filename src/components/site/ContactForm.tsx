@@ -45,6 +45,7 @@ export function ContactForm() {
         <input
           required
           name="name"
+          aria-label="Your Name"
           placeholder="Your Name"
           className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
         />
@@ -52,6 +53,7 @@ export function ContactForm() {
           required
           type="email"
           name="email"
+          aria-label="Email Address"
           placeholder="Email Address"
           className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
         />
@@ -60,11 +62,13 @@ export function ContactForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <input
           name="phone"
+          aria-label="Phone Number"
           placeholder="Phone (optional)"
           className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
         />
         <input
           name="subject"
+          aria-label="Subject"
           placeholder="Subject (optional)"
           className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
         />
@@ -73,6 +77,7 @@ export function ContactForm() {
       <textarea
         required
         name="message"
+        aria-label="Your Message"
         placeholder="Your Message..."
         rows={3}
         className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all resize-none"
@@ -81,6 +86,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
+        aria-label="Send Message"
         className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gold px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-gold/90 disabled:opacity-70"
       >
         {isSubmitting ? (

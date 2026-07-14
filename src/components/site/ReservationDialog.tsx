@@ -3,11 +3,25 @@ import { submitReservation } from "@/api/reservation";
 import { Loader2, Calendar as CalendarIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createReservationSchema, CreateReservationInput } from "@/lib/validators/reservation";
 
 export function ReservationDialog() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset
+  } = useForm<CreateReservationInput>({
+    resolver: zodResolver(createReservationSchema),
+    defaultValues: {
+      occasion: "CASUAL"
+    }
+  });
 
   useEffect(() => {
     const handleHash = () => {
@@ -26,26 +40,13 @@ export function ReservationDialog() {
   const closeDialog = () => {
     window.history.pushState(null, "", window.location.pathname + window.location.search);
     setIsOpen(false);
-    // Reset success state after animation finishes
-    setTimeout(() => setIsSuccess(false), 500);
+    setTimeout(() => {
+      setIsSuccess(false);
+      reset();
+    }, 500);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      phone: formData.get("phone") as string,
-      date: formData.get("date") as string,
-      time: formData.get("time") as string,
-      guests: Number(formData.get("guests")),
-      occasion: formData.get("occasion") as any,
-      specialRequests: formData.get("specialRequests") as string,
-    };
-
+  const onSubmit = async (data: CreateReservationInput) => {
     try {
       const res = await submitReservation({ data });
       if (res.success) {
@@ -54,10 +55,7 @@ export function ReservationDialog() {
         toast.error(res.error || "Failed to submit reservation. Please try again.");
       }
     } catch (err: any) {
-      console.error("Reservation Error:", err); 
       toast.error(err.message || "Failed to submit reservation. Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -85,6 +83,7 @@ export function ReservationDialog() {
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,162,39,0.3),transparent_70%)]" />
               <button
                 onClick={closeDialog}
+                aria-label="Close reservation dialog"
                 className="absolute right-4 top-4 rounded-full bg-black/20 p-2 text-white/70 hover:bg-black/40 hover:text-white transition-colors"
               >
                 <X size={20} />
@@ -110,24 +109,43 @@ export function ReservationDialog() {
                 </p>
                 <button
                   onClick={closeDialog}
+                  aria-label="Close confirmation"
                   className="rounded-xl bg-white/10 px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-white/20 transition-colors"
                 >
                   Close
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="p-8">
+              <form onSubmit={handleSubmit(onSubmit)} className="p-8">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <input required name="name" placeholder="Full Name" className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
-                  <input required type="email" name="email" placeholder="Email Address" className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
-                  <input required name="phone" placeholder="Phone Number" className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
-                  <input required type="number" name="guests" min="1" max="20" placeholder="Number of Guests" className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
-                  <input required type="date" name="date" className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all [color-scheme:dark]" />
-                  <input required type="time" name="time" className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all [color-scheme:dark]" />
+                  <div>
+                    <input {...register("name")} aria-label="Full Name" placeholder="Full Name" className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
+                    {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
+                  </div>
+                  <div>
+                    <input {...register("email")} aria-label="Email Address" type="email" placeholder="Email Address" className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
+                    {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+                  </div>
+                  <div>
+                    <input {...register("phone")} aria-label="Phone Number" placeholder="Phone Number" className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
+                    {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p>}
+                  </div>
+                  <div>
+                    <input {...register("guests", { valueAsNumber: true })} aria-label="Number of Guests" type="number" min="1" max="20" placeholder="Number of Guests" className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
+                    {errors.guests && <p className="mt-1 text-xs text-red-500">{errors.guests.message}</p>}
+                  </div>
+                  <div>
+                    <input {...register("date")} aria-label="Reservation Date" type="date" className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all [color-scheme:dark]" />
+                    {errors.date && <p className="mt-1 text-xs text-red-500">{errors.date.message}</p>}
+                  </div>
+                  <div>
+                    <input {...register("time")} aria-label="Reservation Time" type="time" className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all [color-scheme:dark]" />
+                    {errors.time && <p className="mt-1 text-xs text-red-500">{errors.time.message}</p>}
+                  </div>
                 </div>
 
                 <div className="mt-4">
-                  <select name="occasion" className="h-11 w-full rounded-xl border border-white/10 bg-[#161616] px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all">
+                  <select {...register("occasion")} aria-label="Occasion" className="h-11 w-full rounded-xl border border-white/10 bg-[#161616] px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all">
                     <option value="CASUAL">Casual Dining</option>
                     <option value="BIRTHDAY">Birthday</option>
                     <option value="ANNIVERSARY">Anniversary</option>
@@ -135,15 +153,18 @@ export function ReservationDialog() {
                     <option value="CORPORATE">Corporate Event</option>
                     <option value="OTHER">Other</option>
                   </select>
+                  {errors.occasion && <p className="mt-1 text-xs text-red-500">{errors.occasion.message}</p>}
                 </div>
 
                 <div className="mt-4">
-                  <textarea name="specialRequests" placeholder="Special Requests (Optional)" rows={3} className="w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
+                  <textarea {...register("specialRequests")} aria-label="Special Requests" placeholder="Special Requests (Optional)" rows={3} className="w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all" />
+                  {errors.specialRequests && <p className="mt-1 text-xs text-red-500">{errors.specialRequests.message}</p>}
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
+                  aria-label="Submit reservation request"
                   className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-gold px-6 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:bg-gold/90 disabled:opacity-70"
                 >
                   {isSubmitting ? (

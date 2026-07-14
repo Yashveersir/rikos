@@ -114,7 +114,7 @@ export const adminCreateItem = createServerFn({ method: 'POST' })
       try { 
                       requireAdmin()
                       const item = await createItem(data)
-                      return formatMenuData(item)
+                      return { success: true, data: formatMenuData(item) }
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })
 
@@ -125,7 +125,7 @@ export const adminUpdateItem = createServerFn({ method: 'POST' })
                       requireAdmin()
                       const { id, ...updateData } = data
                       const item = await updateItem(id, updateData)
-                      return formatMenuData(item)
+                      return { success: true, data: formatMenuData(item) }
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })
 
@@ -145,6 +145,6 @@ export const adminToggleItem = createServerFn({ method: 'POST' })
       try { 
                       requireAdmin()
                       const item = await toggleItemAvailability(data.id)
-                      return formatMenuData(item)
+                      return { success: true, data: formatMenuData(item) }
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })

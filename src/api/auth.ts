@@ -7,6 +7,7 @@ import {
   resetPassword, 
   getUsers, 
   createAdmin, 
+  updateUser,
   toggleUserStatus 
 } from '@/server/services/auth.service'
 import { AdminRole } from '@/lib/auth'
@@ -36,7 +37,7 @@ export const adminLogin = createServerFn({ method: 'POST' })
                   })
 
                   return { success: true, admin }
-                } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminLogout = createServerFn({ method: 'POST' })
@@ -45,7 +46,7 @@ export const adminLogout = createServerFn({ method: 'POST' })
                       deleteCookie('access_token')
                       deleteCookie('refresh_token')
                       return { success: true }
-                     } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                     } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const getAdminSession = createServerFn({ method: 'GET' })
@@ -57,7 +58,7 @@ export const getAdminSession = createServerFn({ method: 'GET' })
                       } catch {
                         return null
                       }
-                     } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                     } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminForgotPassword = createServerFn({ method: 'POST' })
@@ -66,7 +67,7 @@ export const adminForgotPassword = createServerFn({ method: 'POST' })
       try {
                   await createPasswordResetToken(data.email)
                   return { success: true } // Always return true for security
-                } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminResetPassword = createServerFn({ method: 'POST' })
@@ -75,7 +76,7 @@ export const adminResetPassword = createServerFn({ method: 'POST' })
       try {
                   await resetPassword(data.token, data.password, data.uid)
                   return { success: true }
-                } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminGetUsers = createServerFn({ method: 'GET' })
@@ -83,7 +84,7 @@ export const adminGetUsers = createServerFn({ method: 'GET' })
       try { 
                       requireAdmin()
                       return getUsers()
-                     } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                     } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminCreateUser = createServerFn({ method: 'POST' })
@@ -98,7 +99,25 @@ export const adminCreateUser = createServerFn({ method: 'POST' })
                   requireAdmin()
                   const user = await createAdmin({ ...data, role: data.role as AdminRole })
                   return { success: true, id: user.id }
-                } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
+  })
+
+export const adminUpdateUser = createServerFn({ method: 'POST' })
+  .validator(z.object({
+    id: z.string(),
+    name: z.string().min(2).optional(),
+    email: z.string().email().optional(),
+    password: z.string().min(8).optional().or(z.literal('')),
+    role: z.enum(['SUPER_ADMIN', 'ADMIN', 'STAFF']).optional()
+  }))
+  .handler(async ({ data }) => {
+      try {
+                  requireAdmin()
+                  const updateData: any = { ...data }
+                  if (updateData.password === '') delete updateData.password
+                  const user = await updateUser(data.id, updateData)
+                  return { success: true, id: user.id }
+                } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminToggleUserStatus = createServerFn({ method: 'POST' })
@@ -108,5 +127,5 @@ export const adminToggleUserStatus = createServerFn({ method: 'POST' })
                   requireAdmin()
                   await toggleUserStatus(data.id)
                   return { success: true }
-                } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })

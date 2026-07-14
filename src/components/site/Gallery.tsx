@@ -51,7 +51,7 @@ export function Gallery() {
               transition={{ duration: 0.8, delay: (i % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
               className={`group relative overflow-hidden rounded-2xl border border-white/10 ${it.span}`}
             >
-              <img
+              <img loading="lazy" decoding="async"
                 src={it.src}
                 alt={it.alt}
                 loading="lazy"

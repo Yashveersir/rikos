@@ -282,8 +282,11 @@ export function Menu() {
     }))
   })) : sections;
 
-  const [active, setActive] = useState<Filter>("All");
+  const [active, setActive] = useState<string>("All");
   const visible = active === "All" ? dbSections : dbSections.filter((s: any) => s.group === active);
+  
+  // Create a unique array of groups from the available sections
+  const dynamicFilters = ["All", ...Array.from(new Set(dbSections.map((s: any) => s.group)))] as string[];
 
   return (
     <section id="menu" className="relative py-32 scroll-mt-24">
@@ -306,7 +309,7 @@ export function Menu() {
         </div>
 
         <div className="mt-12 flex flex-wrap gap-2">
-          {filters.map((c) => (
+          {dynamicFilters.map((c) => (
             <button
               key={c}
               onClick={() => setActive(c)}
@@ -339,7 +342,7 @@ export function Menu() {
                 <div className="lg:col-span-5">
                   <div className="group relative overflow-hidden rounded-3xl glass-card">
                     <div className="relative h-80 sm:h-96 overflow-hidden">
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={s.img}
                         alt={s.title}
                         loading="lazy"

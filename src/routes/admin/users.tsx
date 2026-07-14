@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { CreateUserModal } from "@/components/admin/CreateUserModal";
+import { EditUserModal } from "@/components/admin/EditUserModal";
 import { adminGetUsers, adminToggleUserStatus } from "@/api/auth";
 import { format } from "date-fns";
 import { Users, Power, Edit2, Loader2, ShieldAlert } from "lucide-react";
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/admin/users")({
 function AdminUsers() {
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<any | null>(null);
 
   const { data: users, isLoading, refetch } = useQuery({
     queryKey: ["admin", "users"],
@@ -106,6 +108,7 @@ function AdminUsers() {
             </button>
           )}
           <button 
+            onClick={() => setEditingUser(row)}
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground transition-colors"
             title="Edit User"
           >
@@ -141,6 +144,16 @@ function AdminUsers() {
           open={isUserModalOpen} 
           onOpenChange={setIsUserModalOpen} 
           onSuccess={() => refetch()} 
+        />
+        
+        <EditUserModal 
+          open={!!editingUser}
+          onOpenChange={(val) => !val && setEditingUser(null)}
+          onSuccess={() => {
+            setEditingUser(null);
+            refetch();
+          }}
+          user={editingUser}
         />
       </div>
     </>

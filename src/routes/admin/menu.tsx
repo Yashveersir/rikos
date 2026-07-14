@@ -5,6 +5,7 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { CreateCategoryModal } from "@/components/admin/CreateCategoryModal";
 import { CreateItemModal } from "@/components/admin/CreateItemModal";
+import { EditItemModal } from "@/components/admin/EditItemModal";
 import { adminGetCategories, adminGetItems, adminToggleItem } from "@/api/menu";
 import { Plus, Power, Edit2, Loader2, GripVertical } from "lucide-react";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ function AdminMenu() {
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<any | null>(null);
 
   const { data: categories, isLoading: isLoadingCats } = useQuery({
     queryKey: ["admin", "menu", "categories"],
@@ -112,6 +114,7 @@ function AdminMenu() {
             )}
           </button>
           <button 
+            onClick={() => setEditingItem(row)}
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground transition-colors"
             title="Edit Item"
           >
@@ -194,6 +197,17 @@ function AdminMenu() {
           onSuccess={() => refetch()} 
           categories={categories || []}
           defaultCategoryId={activeCategory || undefined}
+        />
+        
+        <EditItemModal 
+          open={!!editingItem} 
+          onOpenChange={(val) => !val && setEditingItem(null)} 
+          onSuccess={() => {
+            setEditingItem(null);
+            refetch();
+          }} 
+          categories={categories || []}
+          item={editingItem}
         />
       </div>
     </>

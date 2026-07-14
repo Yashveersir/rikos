@@ -66,6 +66,27 @@ export async function createAdmin(data: { email: string; password: string; name:
   })
 }
 
+export async function updateUser(id: string, data: { name?: string; role?: AdminRole; email?: string; password?: string }) {
+  const user = await db.adminUser.findUnique({ where: { id } })
+  if (!user) throw new Error("User not found")
+  if (user.role === AdminRole.SUPER_ADMIN && data.role && data.role !== AdminRole.SUPER_ADMIN) {
+    throw new Error("Cannot change role of Super Admin")
+  }
+
+  const updateData: any = {}
+  if (data.name) updateData.name = data.name
+  if (data.email) updateData.email = data.email
+  if (data.role) updateData.role = data.role
+  if (data.password) {
+    updateData.password = await hashPassword(data.password)
+  }
+
+  return db.adminUser.update({
+    where: { id },
+    data: updateData
+  })
+}
+
 export async function getUsers() {
   return db.adminUser.findMany({
     select: {

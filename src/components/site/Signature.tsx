@@ -12,7 +12,18 @@ const cards = [
   { img: mocktail, title: "Mocktails", desc: "Crystal glass, layered flavor." },
 ];
 
-export function Signature() {
+export function Signature({ settings }: { settings?: Record<string, string> }) {
+  const signatureTitle = settings?.signature_title || "Four flavors, one destination.";
+  
+  // Split title by comma if possible
+  const titleParts = signatureTitle.includes(',') 
+    ? signatureTitle.split(',').map(p => p.trim() + ',') 
+    : [signatureTitle];
+  // Remove the trailing comma from the last part
+  if (titleParts.length > 1) {
+    titleParts[titleParts.length - 1] = titleParts[titleParts.length - 1].slice(0, -1);
+  }
+
   return (
     <section className="relative py-32 scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6">
@@ -20,7 +31,11 @@ export function Signature() {
           <Reveal>
             <SectionEyebrow>Signature Experience</SectionEyebrow>
             <h2 className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl">
-              Four flavors, <span className="gold-gradient-text italic">one destination</span>.
+              {titleParts.map((part, i) => (
+                <span key={i} className={i === 1 ? "gold-gradient-text italic" : ""}>
+                  {part}{i === 0 && titleParts.length > 1 ? " " : ""}
+                </span>
+              ))}
             </h2>
           </Reveal>
         </div>
@@ -37,7 +52,7 @@ export function Signature() {
               className="group relative overflow-hidden rounded-3xl border border-white/10 bg-card"
             >
               <div className="relative h-[420px] overflow-hidden">
-                <img
+                <img loading="lazy" decoding="async"
                   src={c.img}
                   alt={c.title}
                   loading="lazy"

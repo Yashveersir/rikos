@@ -15,7 +15,10 @@ const stats = [
   { value: "5F", label: "Rooftop Lounge" },
 ];
 
-export function About() {
+export function About({ settings }: { settings?: Record<string, string> }) {
+  const aboutHeading = settings?.about_heading || "Our Story";
+  const aboutText = settings?.about_text || "Riko's is Burdwan's answer to modern luxury dining — a restro-lounge crafted around warm timber, brick and gold.\n\nWhether it's an intimate evening, a family gathering, or a spontaneous night out with friends — this is where the city comes to be seen and to savor.";
+
   return (
     <section id="about" className="relative py-32 scroll-mt-24">
       <div className="mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-2 lg:items-center">
@@ -67,29 +70,19 @@ export function About() {
 
         <div className="order-1 lg:order-2">
           <Reveal>
-            <SectionEyebrow>Our Story</SectionEyebrow>
+            <SectionEyebrow>{aboutHeading}</SectionEyebrow>
             <h2 className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl">
               An address for the <span className="gold-gradient-text italic">unforgettable</span>.
             </h2>
           </Reveal>
 
-          <Reveal delay={1}>
-            <p className="mt-8 text-lg leading-relaxed text-muted-foreground">
-              Riko&apos;s is Burdwan&apos;s answer to modern luxury dining — a
-              restro-lounge crafted around warm timber, brick and gold. From the
-              first sip of a signature mocktail to the last note of a
-              slow-cooked biryani, every moment is designed to feel like a
-              celebration.
-            </p>
-          </Reveal>
-
-          <Reveal delay={2}>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Whether it&apos;s an intimate evening, a family gathering, or a
-              spontaneous night out with friends — this is where the city comes
-              to be seen and to savor.
-            </p>
-          </Reveal>
+          {aboutText.split('\n').filter(Boolean).map((paragraph, idx) => (
+            <Reveal key={idx} delay={1 + idx}>
+              <p className="mt-8 text-lg leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                {paragraph}
+              </p>
+            </Reveal>
+          ))}
 
           <Reveal delay={3}>
             <div className="mt-12 grid grid-cols-3 gap-4">

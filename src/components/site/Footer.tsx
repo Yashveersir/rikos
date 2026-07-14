@@ -2,7 +2,9 @@ const quick = ["Home", "About", "Menu", "Gallery", "Reviews", "Contact"];
 const menuLinks = ["Indian", "Chinese", "Tandoor", "Rice", "Starters", "Mocktails"];
 import { NewsletterForm } from "./NewsletterForm";
 
-export function Footer() {
+export function Footer({ settings }: { settings?: Record<string, string> }) {
+  const footerTagline = settings?.footer_tagline || "A premium restro-lounge on the 5th floor of Regent Star Mall, Burdwan — where every visit feels like a celebration.";
+
   return (
     <footer className="relative border-t border-white/5 bg-[color:var(--ink)] py-16">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-4">
@@ -14,8 +16,7 @@ export function Footer() {
             Cafe · Restro-Lounge
           </p>
           <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
-            A premium restro-lounge on the 5th floor of Regent Star Mall,
-            Burdwan — where every visit feels like a celebration.
+            {footerTagline}
           </p>
           <NewsletterForm />
         </div>

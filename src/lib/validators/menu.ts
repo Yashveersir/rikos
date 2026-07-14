@@ -12,7 +12,7 @@ export const createMenuItemSchema = z.object({
   categoryId: z.string(),
   name: z.string().min(1).max(200),
   description: z.string().max(1000).optional(),
-  price: z.number().positive(),
+  price: z.number().min(0),
   imageUrl: z.string().url().optional(),
   isVeg: z.boolean().default(false),
   spicyLevel: z.number().int().min(0).max(3).default(0),

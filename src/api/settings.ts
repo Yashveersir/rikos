@@ -13,16 +13,7 @@ import {
 export const publicGetSettings = createServerFn({ method: 'GET' })
   .handler(async () => {
       try { 
-                      return getSettings([
-                        'restaurant_name',
-                        'restaurant_phone',
-                        'restaurant_email',
-                        'restaurant_address',
-                        'opening_hours',
-                        'instagram_url',
-                        'facebook_url',
-                        'restaurant_logo'
-                      ])
+                      return getAllSettings()
                      } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
   })
 

@@ -24,7 +24,7 @@ export const submitReservation = createServerFn({ method: 'POST' })
               if (req) ip = (req.headers as any)?.get?.('x-forwarded-for') || (req.headers as any)?.['x-forwarded-for'] || 'unknown';
             } catch(e) {}
             
-            const { allowed } = checkRateLimit(`reservation:${validated.email}`, 3, 3600_000)
+            const { allowed } = await checkRateLimit(`reservation:${validated.email}`, 3, 3600_000)
             if (!allowed) return { success: false, error: 'Too many requests. Please try again later.', id: undefined }
             
             const reservation = await createReservation(validated)
@@ -44,21 +44,19 @@ export const adminGetReservations = createServerFn({ method: 'GET' })
   }).optional())
   .handler(async ({ data }) => {
       try { 
-                      console.log("HIT SUBMIT RESERVATION HANDLER", data);
                       requireAdmin()
                       return getReservations(data)
-                     } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                     } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminUpdateReservation = createServerFn({ method: 'POST' })
   .validator(updateReservationSchema)
   .handler(async ({ data }) => {
       try { 
-                      console.log("HIT SUBMIT RESERVATION HANDLER", data);
                       requireAdmin()
                       const reservation = await updateReservation(data)
                       return { success: true, id: reservation.id }
-                     } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                     } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const adminGetReservationStats = createServerFn({ method: 'GET' })
@@ -66,14 +64,13 @@ export const adminGetReservationStats = createServerFn({ method: 'GET' })
       try { 
                       requireAdmin()
                       return getReservationStats()
-                     } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                     } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })
 
 export const publicGetAvailableTables = createServerFn({ method: 'GET' })
   .validator(z.object({ date: z.string(), time: z.string(), guests: z.number() }))
   .handler(async ({ data }) => {
       try { 
-                      console.log("HIT SUBMIT RESERVATION HANDLER", data);
                       return getAvailableTables(data.date, data.time, data.guests)
-                     } catch (e: any) { console.error("Server Error:", e); return { success: false, error: e.message || "Failed to process request" }; }
+                     } catch (e) { return { success: false, error: e instanceof Error ? e.message : "Failed to process request" }; }
   })

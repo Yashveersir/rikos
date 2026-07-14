@@ -2,7 +2,14 @@ import { MapPin, Phone, Mail, Clock, Instagram, Facebook } from "lucide-react";
 import { Reveal, SectionEyebrow } from "./Reveal";
 import { ContactForm } from "./ContactForm";
 
-export function Contact() {
+export function Contact({ settings }: { settings?: Record<string, string> }) {
+  const address = settings?.restaurant_address || "5th Floor, Regent Star Mall,\nGolapbag More, Grand Trunk Road,\nBurdwan, West Bengal";
+  const phone = settings?.restaurant_phone || "07477324365";
+  const email = settings?.restaurant_email || "hello@rikoscafe.in";
+  const hours = settings?.opening_hours || "Mon – Sun · 12:00 PM – 11:30 PM";
+  const instagram = settings?.instagram_url || "#";
+  const facebook = settings?.facebook_url || "#";
+
   return (
     <section id="contact" className="relative py-32 scroll-mt-40">
       <div className="mx-auto max-w-7xl px-6">
@@ -32,29 +39,34 @@ export function Contact() {
           <Reveal delay={1}>
             <div className="grid gap-4">
               <InfoRow icon={MapPin} label="Address">
-                5th Floor, Regent Star Mall,
-                <br />
-                Golapbag More, Grand Trunk Road,
-                <br />
-                Burdwan, West Bengal
+                {address.split('\n').map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
               </InfoRow>
               <InfoRow icon={Phone} label="Phone">
-                <a href="tel:07477324365" className="hover:text-gold">
-                  07477324365
+                <a href={`tel:${phone}`} className="hover:text-gold">
+                  {phone}
                 </a>
               </InfoRow>
               <InfoRow icon={Mail} label="Email">
-                <a href="mailto:hello@rikoscafe.in" className="hover:text-gold">
-                  hello@rikoscafe.in
+                <a href={`mailto:${email}`} className="hover:text-gold">
+                  {email}
                 </a>
               </InfoRow>
               <InfoRow icon={Clock} label="Opening Hours">
-                Mon – Sun · 12:00 PM – 11:30 PM
+                {hours}
               </InfoRow>
 
               <div className="flex gap-3 pt-2 pb-4">
-                <SocialButton icon={Instagram} label="Instagram" href="#" />
-                <SocialButton icon={Facebook} label="Facebook" href="#" />
+                {instagram && instagram !== "#" && (
+                  <SocialButton icon={Instagram} label="Instagram" href={instagram} />
+                )}
+                {facebook && facebook !== "#" && (
+                  <SocialButton icon={Facebook} label="Facebook" href={facebook} />
+                )}
               </div>
               
               <ContactForm />

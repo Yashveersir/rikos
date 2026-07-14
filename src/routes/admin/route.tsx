@@ -25,6 +25,8 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
+import { SidebarProvider } from "@/components/admin/SidebarContext";
+
 function AdminLayout() {
   // If we are on /admin/login, don't show sidebar
   const isLoginPage = Route.useMatch().pathname === "/admin/login";
@@ -38,11 +40,13 @@ function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <AdminSidebar />
-      <main className="ml-64 flex min-h-screen flex-col">
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="min-h-screen bg-background text-foreground flex">
+        <AdminSidebar />
+        <main className="flex-1 w-full lg:ml-64 flex min-h-screen flex-col">
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }

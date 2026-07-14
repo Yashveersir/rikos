@@ -127,13 +127,6 @@ function AdminReservations() {
                   Complete
                 </button>
               )}
-              <button 
-                onClick={(e) => { e.stopPropagation(); }}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground transition-colors"
-                title="Edit"
-              >
-                <Edit2 size={14} />
-              </button>
             </>
           )}
         </div>

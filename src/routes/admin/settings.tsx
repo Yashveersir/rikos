@@ -110,6 +110,103 @@ function AdminSettings() {
                   className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all resize-none"
                 />
               </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  Opening Hours
+                </label>
+                <input
+                  type="text"
+                  value={formData["opening_hours"] || ""}
+                  onChange={(e) => handleChange("opening_hours", e.target.value)}
+                  className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8 glass-card">
+            <h3 className="font-display text-2xl text-gold mb-6">Website Content</h3>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  Hero Title
+                </label>
+                <input
+                  type="text"
+                  value={formData["hero_title"] || ""}
+                  onChange={(e) => handleChange("hero_title", e.target.value)}
+                  className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
+                />
+                <p className="mt-2 text-xs text-muted-foreground">Separate parts with a period (.) to create stacked text effect.</p>
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  Hero Subtitle
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData["hero_subtitle"] || ""}
+                  onChange={(e) => handleChange("hero_subtitle", e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all resize-none"
+                />
+              </div>
+              <div className="md:col-span-2 border-t border-white/5 pt-6 mt-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  About Section Heading
+                </label>
+                <input
+                  type="text"
+                  value={formData["about_heading"] || ""}
+                  onChange={(e) => handleChange("about_heading", e.target.value)}
+                  className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  About Section Text
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData["about_text"] || ""}
+                  onChange={(e) => handleChange("about_text", e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all resize-none"
+                />
+              </div>
+              <div className="border-t border-white/5 pt-6 mt-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  Signature Section Title
+                </label>
+                <input
+                  type="text"
+                  value={formData["signature_title"] || ""}
+                  onChange={(e) => handleChange("signature_title", e.target.value)}
+                  className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
+                />
+                <p className="mt-2 text-xs text-muted-foreground">Separate parts with a comma (,) for styling.</p>
+              </div>
+              <div className="border-t border-white/5 pt-6 mt-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  Features Section Title
+                </label>
+                <input
+                  type="text"
+                  value={formData["features_title"] || ""}
+                  onChange={(e) => handleChange("features_title", e.target.value)}
+                  className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
+                />
+                <p className="mt-2 text-xs text-muted-foreground">The last word will be styled in gold.</p>
+              </div>
+              <div className="md:col-span-2 border-t border-white/5 pt-6 mt-2">
+                <label className="mb-2 block text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  Footer Tagline
+                </label>
+                <input
+                  type="text"
+                  value={formData["footer_tagline"] || ""}
+                  onChange={(e) => handleChange("footer_tagline", e.target.value)}
+                  className="h-11 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-foreground focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/50 transition-all"
+                />
+              </div>
             </div>
           </div>
 

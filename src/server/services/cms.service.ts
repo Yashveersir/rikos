@@ -54,6 +54,11 @@ export async function initializeDefaultSettings(): Promise<void> {
     facebook_url: "#",
     hero_title: "Dine. Celebrate. Experience.",
     hero_subtitle: "A cinematic restro-lounge on the 5th floor of Regent Star Mall — where fine Indian, Chinese and tandoor cuisine meet an ambience worth remembering.",
+    about_heading: "Our Story",
+    about_text: "Established with a vision to redefine luxury dining in Burdwan, Riko's merges the cinematic allure of a lounge with the warmth of a fine-dining restaurant. From the bespoke neon art installations to the meticulous plating of our signature dishes, every element is designed to craft an unforgettable experience. Whether it's a casual evening or a grand celebration, Riko's sets the perfect stage.",
+    signature_title: "Four flavors, one destination.",
+    features_title: "Experience Luxury",
+    footer_tagline: "Experience the pinnacle of culinary art and lounge ambience.",
     meta_title: "Riko's Cafe & Restro-Lounge — Luxury Dining in Burdwan",
     meta_description: "Riko's Cafe & Restro-Lounge in Burdwan — a premium destination for Indian, Chinese, Tandoor and signature mocktails.",
     google_analytics_id: ""

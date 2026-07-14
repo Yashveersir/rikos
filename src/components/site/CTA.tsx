@@ -13,7 +13,7 @@ export function CTA() {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden rounded-[2rem] border border-gold/20"
         >
-          <img
+          <img loading="lazy" decoding="async"
             src={hero}
             alt="Riko's interior"
             loading="lazy"

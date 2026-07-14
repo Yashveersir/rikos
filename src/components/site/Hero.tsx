@@ -4,12 +4,20 @@ import { ArrowRight, ChevronDown, UtensilsCrossed } from "lucide-react";
 import heroAsset from "@/assets/rikos-main-hall.webp.asset.json";
 const hero = heroAsset.url;
 
-export function Hero() {
+export function Hero({ settings }: { settings?: Record<string, string> }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  const heroTitle = settings?.hero_title || "Dine. Celebrate. Experience.";
+  const heroSubtitle = settings?.hero_subtitle || "A cinematic restro-lounge on the 5th floor of Regent Star Mall — where fine Indian, Chinese and tandoor cuisine meet an ambience worth remembering.";
+  
+  // Split title by period or comma for the stacked effect, fallback to single line if no splits
+  const titleParts = heroTitle.includes('.') 
+    ? heroTitle.split('.').filter(Boolean).map(p => p.trim() + '.') 
+    : [heroTitle];
 
   return (
     <section
@@ -60,9 +68,14 @@ export function Hero() {
           transition={{ duration: 1.2, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="font-display text-6xl leading-[0.95] tracking-tight sm:text-7xl md:text-8xl lg:text-[9rem]"
         >
-          <span className="block">Dine.</span>
-          <span className="block gold-gradient-text italic">Celebrate.</span>
-          <span className="block">Experience.</span>
+          {titleParts.map((part, i) => (
+            <span 
+              key={i} 
+              className={`block ${i === 1 ? 'gold-gradient-text italic' : ''}`}
+            >
+              {part}
+            </span>
+          ))}
         </motion.h1>
 
         <motion.p
@@ -71,9 +84,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.9 }}
           className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
         >
-          A cinematic restro-lounge on the 5th floor of Regent Star Mall — where
-          fine Indian, Chinese and tandoor cuisine meet an ambience worth
-          remembering.
+          {heroSubtitle}
         </motion.p>
 
         <motion.div
